@@ -1,0 +1,71 @@
+# Esquema de Dados Star Wars [cite: 585]
+
+enum Episode {
+  NEWHOPE
+  EMPIRE
+  JEDI
+}
+
+interface Character {
+  id: ID!
+  name: String!
+  appearsIn: [Episode]!
+  friends: [Character]
+}
+
+type Droid implements Character {
+  id: ID!
+  name: String!
+  appearsIn: [Episode]!
+  friends: [Character]
+  primaryFunction: String
+}
+
+type Human implements Character {
+  id: ID!
+  name: String!
+  appearsIn: [Episode]!
+  friends: [Character]
+  height: Float
+}
+
+type Starship {
+  id: ID!
+  name: String!
+  length: Float
+}
+
+input ReviewInput {
+  stars: Int!
+  commentary: String
+}
+
+type Review {
+  stars: Int!
+  commentary: String
+}
+
+union SearchResult = Human | Droid | Starship
+
+# Ponto de entrada para consultas [cite: 648]
+type Query {
+  hero(episode: Episode): Character
+  droid(id: ID!): Droid
+  search(text: String!): [SearchResult!]!
+  
+  # Exercícios: Novas Queries [cite: 1145, 1146]
+  humans: [Human!]!
+  starships: [Starship!]!
+  character(id: ID!): Character
+}
+
+# Ponto de entrada para modificações [cite: 655]
+type Mutation {
+  createReview(episode: Episode!, review: ReviewInput!): Review
+  
+  # Exercícios: Novas Mutations [cite: 1151, 1152, 1153, 1159]
+  createHuman(id: ID!, name: String!, height: Float): Human
+  createDroid(id: ID!, name: String!, primaryFunction: String): Droid
+  createStarship(id: ID!, name: String!, length: Float): Starship
+  addFriend(characterId: ID!, friendId: ID!): Character
+}
